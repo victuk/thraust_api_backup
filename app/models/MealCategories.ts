@@ -17,6 +17,6 @@ type mealCategoryCollectionType = InferSchemaType<typeof mealCategorySchema>;
 
 mealCategorySchema.plugin(paginate);
 
-const mealCategoryCollection = model<mealCategoryCollectionType, PaginateModel<mealCategoryCollectionType>>("mealcategory", mealCategorySchema);
+const mealCategoryCollection = model<mealCategoryCollectionType, PaginateModel<mealCategoryCollectionType>>("categories", mealCategorySchema);
 
 export {mealCategoryCollection, mealCategoryCollectionType};

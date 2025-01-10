@@ -3,11 +3,6 @@ import paginate from "mongoose-paginate-v2";
 
 
 const orderSchema = new Schema({
-    shopId: {
-        type: Schema.Types.ObjectId,
-        ref: "shops",
-        required: true,
-    },
     shopDeleted: {
         type: Boolean,
         default: false
@@ -41,10 +36,6 @@ const orderSchema = new Schema({
     shippingFee: {
         type: Number,
         default: 0
-    },
-    hungryFee: {
-        type: Number, 
-        required: true
     },
     rating: {
         type: Number,

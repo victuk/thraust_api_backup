@@ -38,9 +38,9 @@ export const orderHistory = async (
     const orders = await orderCollection.paginate(
       {
         customerId: userId,
-        orderStatus: { $in: ["payment-failed", "cancelled", "timed-out", "completed"] },
+        orderStatus: { $in: ["payment-failed", "cancelled", "paid", "timed-out", "completed"] },
       },
-      { page, limit, populate: "shopId" }
+      { page, limit, sort: {createdAt: -1} }
     );
 
     return {
@@ -57,11 +57,10 @@ export const orderHistory = async (
 };
 
 export const createAnOrder = async ({
-  shopId,
+  // shopId,
   products,
   customerId,
   totalCost,
-  country,
   state,
   city,
   address,
@@ -74,35 +73,17 @@ export const createAnOrder = async ({
     const uid = v4();
 
     const newOrder = await orderCollection.create({
-        shopId,
+        // shopId,
         products,
         customerId,
         uid,
         totalCost,
-        hungryFee: process.env.HUNGRY_FEE,
-        country,
         state,
         city,
         address,
         latitude,
         longitude,
         // paystackRefernce,
-      });
-
-      const customerQrCode = await QRCode.toDataURL(
-        `hungreecustomerapp://order/${newOrder.id}`
-      )
-
-      const shopQrCode = await QRCode.toDataURL(
-        `hungreeshopapp://order/${newOrder.id}`
-      )
-
-      const riderQrCode = await QRCode.toDataURL(
-        `hungreeriderapp://order/${newOrder.id}`
-      )
-
-      await orderCollection.findByIdAndUpdate(newOrder._id, {
-        customerQrCode, shopQrCode, riderQrCode
       });
 
       
@@ -122,20 +103,18 @@ export const createAnOrder = async ({
   }
 };
 
-export const createPaystackPaymentLink = async (customerId: string, shopId: string, orderId: string): Promise<ControllerResponseInterface> => {
+export const createPaystackPaymentLink = async (customerId: string, orderId: string): Promise<ControllerResponseInterface> => {
   try {
 
     const customerDetails = await customerCollection.findById(customerId).select("firstName lastName userUniqueId email");
-
-    const orderDetails = await orderCollection.findById(orderId).select("shopId totalCost shippingFee hungryFee");
-
-    const shopDetails = await shopCollection.findById(shopId).select("firstName lastName shopName shopLogo email");
     
+    const orderDetails = await orderCollection.findById(orderId);
+
     const response = await axios.post("https://api.paystack.co/transaction/initialize", {
       email: customerDetails?.email,
-      amount: orderDetails!!.totalCost + orderDetails!!.shippingFee + orderDetails!!.hungryFee,
+      amount: orderDetails?.totalCost,
       metadata: {
-        customerDetails, orderDetails, shopDetails
+        customerDetails
       }
     }, {
       headers: {

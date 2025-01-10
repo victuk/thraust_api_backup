@@ -3,6 +3,7 @@ import { authenticatedUsersOnly, CustomRequest, CustomResponse } from '../../mid
 
 import { addNewCategory, deleteCategory, updateCategory } from "../../controllers/admin/categoryController/categoryController";
 import { adminAddAdvert, adminDeleteAdvert, adminGetAllAdverts, adminUpdateAdvert, adminViewAdvert } from "../../controllers/admin/advertController/advert";
+import { updateProduct } from "../../controllers/shops/products/productsController";
 
 const adminRoutes = Router();
 
@@ -48,6 +49,11 @@ adminRoutes.put("/advert/:advertId", async (req: CustomRequest, res: CustomRespo
     const response = await adminUpdateAdvert(req.body);
     res.status(response.status).send(response);
 });
+
+// adminRoutes.put("/product/:productId", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
+//     const response = await updateProduct(req.params.productId, req.body);
+//     res.status(response.status).send(response);
+// });
 
 adminRoutes.delete("/advert/:advertId", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
     

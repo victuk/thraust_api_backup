@@ -274,13 +274,14 @@ httpServer.listen(port, async () => {
 
   const directoryPath = path.join(__dirname, directoryName);
 
-  // Create the directory
-  fs.mkdir(directoryPath, { recursive: true }, (err) => {
-    if (err) {
-      return console.error(`Error creating directory: ${err.message}`);
-    }
-    console.log(`Directory '${directoryName}' created successfully!`);
-  });
+  // Create the directory ///////////////////////
+  // fs.mkdir(directoryPath, { recursive: true }, (err) => {
+  //   if (err) {
+  //     return console.error(`Error creating directory: ${err.message}`);
+  //   }
+  //   console.log(`Directory '${directoryName}' created successfully!`);
+  // });
+  ////////////////////////////////////////////////
 
   // const products = await productCollection.find({});
 

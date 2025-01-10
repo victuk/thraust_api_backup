@@ -10,7 +10,7 @@ const productSchema = new Schema({
     },
     stockStatus: {
         type: String,
-        enum: ["in-stock", "low-stock", "out-of-stock"],
+        enum: ["in-stock", "out-of-stock"],
         default: "in-stock"
     },
     cost: {
@@ -28,6 +28,10 @@ const productSchema = new Schema({
     averageRating: {
         type: Number,
         default: 0
+    },
+    forType: {
+        type: Array,
+        default: []
     },
     sizeAndColor: {
         type: [

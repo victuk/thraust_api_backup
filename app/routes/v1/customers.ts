@@ -6,7 +6,7 @@ import {
 } from "../../middleware/authenticatedUsersOnly";
 import roleBasedAccess from "../../middleware/roleBasedAccess";
 import { loginCustomer, registerCustomer } from "../../controllers/customers/authController/auth";
-import { customerHome } from "../../controllers/customers/homeController/home";
+// import { customerHome } from "../../controllers/customers/homeController/home";
 import { getMealDetails, getMealsNearby, searchMealsNearby } from "../../controllers/customers/ProductController/products";
 import { getShopById, getShopsNearby, searchShop } from "../../controllers/customers/shopsController/shops";
 import { createAnOrder, createPaystackPaymentLink, markOrderAsDelivered, orderHistory, pendingOrders } from "../../controllers/customers/ordersController/orders";
@@ -28,10 +28,10 @@ customerRoutes.use(authenticatedUsersOnly);
 customerRoutes.use(roleBasedAccess(["customer"]));
 
 // Home route
-customerRoutes.get("/home", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
-  const response = await customerHome(req.userDetails!!.userId);
-  res.status(response.status).send(response);
-});
+// customerRoutes.get("/home", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
+//   const response = await customerHome(req.userDetails!!.userId);
+//   res.status(response.status).send(response);
+// });
 
 
 
@@ -88,7 +88,7 @@ customerRoutes.post("/create-order", async (req: CustomRequest, res: CustomRespo
 
 customerRoutes.post("/create-payment-link", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
   req.body.customerId = req.userDetails!!.userId;
-  const response = await createPaystackPaymentLink(req.userDetails!!.userId, req.body.shopId, req.body.orderId);
+  const response = await createPaystackPaymentLink(req.userDetails!!.userId, req.body.orderId);
   res.status(response.status).send(response);
 });
 

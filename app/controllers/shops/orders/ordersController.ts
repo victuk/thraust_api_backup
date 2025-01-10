@@ -1,13 +1,10 @@
 import { ControllerResponseInterface } from "../../../interfaces/responseInterface";
 import { orderCollection } from "../../../models/Orders";
 
-export const pendingOrders = async (
-  shopId: string
-): Promise<ControllerResponseInterface> => {
+export const pendingOrders = async (): Promise<ControllerResponseInterface> => {
   try {
     const pendingOrders = await orderCollection.find({
-      shopId,
-      orderStatus: { $in: ["pending", "shipping-fee-updated", "accepted"] },
+      orderStatus: { $in: ["paid"] },
     }).populate("customerId", "firstName lastName phoneNumber");
 
     return {
@@ -48,14 +45,6 @@ export const updateShippingFee = async (
   shippingFee: number
 ): Promise<ControllerResponseInterface> => {
   try {
-    const orderDetails = await orderCollection.findById(orderId);
-
-    if (orderDetails?.shopId?.toString() != shopId) {
-      return {
-        result: "You are only allowed to update shipping fee for your product.",
-        status: 401,
-      };
-    }
 
     const updatedProduct = await orderCollection.findByIdAndUpdate(
       orderId,
@@ -79,11 +68,11 @@ export const updateShippingFee = async (
   }
 };
 
-export const orderHistory = async (shopId: string, page: number = 1, limit: number = 20): Promise<ControllerResponseInterface> => {
+export const orderHistory = async (page: number = 1, limit: number = 20): Promise<ControllerResponseInterface> => {
     try {
         
         const orders = await orderCollection.paginate({
-            shopId, orderStatus: {$in: ["cancelled", "timed-out", "completed"]}
+            orderStatus: {$in: ["cancelled", "timed-out", "completed"]}
         }, {
             page, limit, populate: [
                 {
