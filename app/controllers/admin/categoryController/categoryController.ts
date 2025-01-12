@@ -36,6 +36,17 @@ export const addNewCategory = async (name: string): Promise<ControllerResponseIn
 export const updateCategory = async (categoryId: string, name: string): Promise<ControllerResponseInterface> => {
     try {
 
+        const categoryDetails = await mealCategoryCollection.findOne({
+            name
+        });
+
+        if(categoryDetails) {
+            return {
+                result: "Category already exist. Duplicate category name not allowed",
+                status: 409
+            }
+        }
+
         const updatedCategory = await mealCategoryCollection.findByIdAndUpdate(categoryId, {
             name, slug: textToSlug(name)
         }, {

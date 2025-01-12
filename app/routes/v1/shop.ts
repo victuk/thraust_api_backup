@@ -7,7 +7,7 @@ import { comparePassword, hashPassword } from "../../utils/authUtilities";
 // import { userCollection } from "../../models/Customers";
 import { propertyOrderCollection } from "../../models/PropertyOrders";
 import axios from "axios";
-import { addAProduct, adminHome, deleteProduct, updateProduct, updateProductStockStatus } from "../../controllers/shops/products/productsController";
+import { addAProduct, adminHome, adminMarkOrderAsDelivered, deleteProduct, updateProduct, updateProductStockStatus } from "../../controllers/shops/products/productsController";
 import { orderHistory, pendingOrders, shopPendingOrderById, updateShippingFee } from "../../controllers/shops/orders/ordersController";
 import { loginShop, registerShop } from "../../controllers/shops/authController/auth";
 import { shopProfile } from "../../controllers/shops/profileController/profile";
@@ -31,6 +31,11 @@ shopRoutes.use(roleBasedAccess(["shop"]));
 shopRoutes.get("/home", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
     req.body.shopId = req.userDetails?.userId;
     const response = await adminHome();
+    res.status(response.status).send(response);
+});
+
+shopRoutes.put("/mark-as-delivered", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
+    const response = await adminMarkOrderAsDelivered(req.body.orderId);
     res.status(response.status).send(response);
 });
 

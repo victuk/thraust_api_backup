@@ -4,10 +4,12 @@ import { authenticatedUsersOnly, CustomRequest, CustomResponse } from '../../mid
 import { addNewCategory, deleteCategory, updateCategory } from "../../controllers/admin/categoryController/categoryController";
 import { adminAddAdvert, adminDeleteAdvert, adminGetAllAdverts, adminUpdateAdvert, adminViewAdvert } from "../../controllers/admin/advertController/advert";
 import { updateProduct } from "../../controllers/shops/products/productsController";
+import roleBasedAccess from "../../middleware/roleBasedAccess";
 
 const adminRoutes = Router();
 
-// adminRoutes.use(authenticatedUsersOnly);
+adminRoutes.use(authenticatedUsersOnly);
+adminRoutes.use(roleBasedAccess(["shop"]));
 
 // Category routes routes
 adminRoutes.post("/category", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {

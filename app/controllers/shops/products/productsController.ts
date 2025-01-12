@@ -7,6 +7,7 @@ import { textToSlug } from "../../../utils/textSlugUtil";
 import mongoose from "mongoose";
 import { uploadBase64Image } from "../../../utils/cloudinaryUtils";
 import { orderCollection } from "../../../models/Orders";
+import { markOrderAsDelivered } from "../../customers/ordersController/orders";
 
 
 export const adminHome = async () => {
@@ -286,3 +287,40 @@ export const deleteProduct = async (
     };
   }
 };
+
+export const adminMarkOrderAsDelivered = async (orderId: string) => {
+  try {
+    
+    const productDetails = await orderCollection.findById(orderId);
+
+    if(!productDetails) {
+      return {
+        result: "Order not found",
+        status: 404,
+      };
+    }
+
+    if(productDetails.orderStatus != "paid") {
+      return {
+        result: "You can only mark orders that has been paid for",
+        status: 401,
+      };
+    }
+
+    await orderCollection.findByIdAndUpdate(orderId, {
+      orderStatus: "completed"
+    });
+
+    return {
+      result: "Order marked as delivered successfully",
+      status: 200
+    };
+
+  } catch (error: any) {
+    return {
+      result: null,
+      status: error.status || 500,
+      error,
+    };
+  }
+}
