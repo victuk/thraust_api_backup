@@ -1,5 +1,5 @@
 function convertToStartOfDay(date: Date) {
-    // Set the time to 23:59:59
+    // Set the time to 00:00:00
     date.setHours(0);
     date.setMinutes(0);
     date.setSeconds(0);
