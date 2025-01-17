@@ -18,13 +18,6 @@ sharedRoutes.get("/categories", async (req: Request, res: Response, next: NextFu
     res.status(response.status).send(response);
 });
 
-sharedRoutes.use(authenticatedUsersOnly);
-
-sharedRoutes.get("/notifications/:userType/:page?/:limit?", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
-    const response = await notifications(req.userDetails!!.userId, req.params.userType as any, parseInt(req.params.page), parseInt(req.params.limit));
-    res.status(response.status).send(response);
-});
-
 sharedRoutes.get("/shop-product/:productId", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
     const response = await shopViewProductById(req.params.productId);
     res.status(response.status).send(response);
@@ -33,6 +26,13 @@ sharedRoutes.get("/shop-product/:productId", async (req: CustomRequest, res: Cus
 // Product routes
 sharedRoutes.get("/shop-products/:page?/:limit?/:category?", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
     const response = await getShopProducts(req.params.category, parseInt(req.params.page), parseInt(req.params.limit));
+    res.status(response.status).send(response);
+});
+
+sharedRoutes.use(authenticatedUsersOnly);
+
+sharedRoutes.get("/notifications/:userType/:page?/:limit?", async (req: CustomRequest, res: CustomResponse, next: NextFunction) => {
+    const response = await notifications(req.userDetails!!.userId, req.params.userType as any, parseInt(req.params.page), parseInt(req.params.limit));
     res.status(response.status).send(response);
 });
 
